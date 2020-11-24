@@ -81,7 +81,7 @@ class bullet:
         self.pressleft = 0
         self.pressright = 0
         self.canvas.bind_all('<space>', self.space_press)
-        self.canvas.bind_all('<r>', self.respawn)
+        self.canvas.bind_all('<r>', self.reload)
         self.pos = self.canvas.coords(self.image)
         print('Init coords', self.pos[0], self.pos[1])
         if pressleft == 1:
@@ -96,8 +96,9 @@ class bullet:
         self.x1 = self.pos[0]
         self.y1 = self.pos[1]
 
-    def respawn(self, evt):
-        print('I am in respawn')
+    def reload(self, evt):
+        print('Reloading...')
+        print('Reloaded')
         self.x = 0
         self.y = 0
         self.pos = self.canvas.coords(self.image)
@@ -138,7 +139,7 @@ class bullet:
             self.y = - 20
             self.canvas.move(self.image, self.x, self.y)
             self.canvas.after(5, self.movement)
-            self.respawn
+            self.reload
             print('i am in draw')
         if self.press_space == 0:
             self.y1 = 0
@@ -224,6 +225,8 @@ while 1:
             enemy2.draw()
             counter = 0
             if bullet2.x1 >= enemy2.x1 and bullet2.y1 == enemy2.y1 + 70 :
+                print("Bullet" , bullet2.x1, bullet2.y1)
+                print("Enemy" , enemy2.x1, enemy2.y1)
                 death_cube2.draw()
                 canvas.create_text(400, 400, text='YOU WIN', font=('Times', 69))
                 score = score + 100
@@ -231,11 +234,11 @@ while 1:
                 gs = 0
                 time.sleep(5)
                 canvas.delete("all")
-                bullet2.respawn
+                bullet2.reload
                 break
     
             elif bullet2.y1 <= 0:
-                print('beesechurger', bullet2.y1)
+                print("Press R to reload now")
                 bullet2.y = 0
                 bullet2.y1 = 700
                 
