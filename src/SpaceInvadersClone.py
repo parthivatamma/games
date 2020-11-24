@@ -1,6 +1,5 @@
-import random
 import time
-#import turtle
+import os
 from tkinter import *
 #from goto import goto, label
 #from tkinter.ttk import *
@@ -26,11 +25,15 @@ tk.wm_attributes("-topmost", 1)
 canvas = Canvas(tk, width=800, height=800, bd=0, highlightthickness=0)
 canvas.pack()
 tk.update()
+prog_dir = os.path.dirname(__file__)
+rel_image_path = "../images/"
+
 
 class ball:
     def __init__(self, canvas, color):
         self.canvas = canvas
-        self.images_sprite = [PhotoImage(file = "C:/Users/ptamm/Documents/SpaceInvaders/spaceship.png")]
+        ship_img = os.path.join(prog_dir, rel_image_path)+"spaceship.png"
+        self.images_sprite = [PhotoImage(file = ship_img)]
         self.image = self.canvas.create_image(400,700 , image = self.images_sprite[0], anchor ='s')
         self.x = 0
         self.y = 0
@@ -47,9 +50,10 @@ class ball:
         self.canvas.bind_all('<KeyPress-a>', self.turn_left)
         self.canvas.bind_all('<KeyPress-d>', self.turn_right)
 
-    #def ball_Coords(self):
-        #global ball_pos     
-        #ball_pos = self.canvas.coords(self.id)
+    def ball_Coords(self):
+        global ball_pos     
+        ball_pos = self.canvas.coords(self.image)
+    #def mypos(self):
 
     def turn_left(self, evt):
         #print("PressLeft", self.x, self.press_left)
@@ -138,8 +142,9 @@ class Coords:
 class bullet:
     def __init__(self, canvas, color):
         self.canvas = canvas
+        bullet_img = os.path.join(prog_dir, rel_image_path)+"bullet.png"
         #self.id = canvas.create_rectangle(7, 7, 14, 14, fill = color)
-        self.images_sprite = [PhotoImage(file = "C:/Users/ptamm/Documents/SpaceInvaders/bullet.png")]
+        self.images_sprite = [PhotoImage(file = bullet_img)]
         self.image = self.canvas.create_image(400,700 , image = self.images_sprite[0], anchor ='s')
         #self.canvas.move(self.id, 400, 300)
         self.x = 0
@@ -150,8 +155,11 @@ class bullet:
         self.pressleft = 0
         self.pressright = 0
         self.canvas.bind_all('<space>', self.space_press)
+        self.canvas.bind_all('<r>', self.respawn)
         self.pos = self.canvas.coords(self.image)
         print('Init coords', self.pos[0], self.pos[1])
+        #origX = yourcanvas.xview()[0]
+        #origY = yourcanvas.yview()[0]
         #print(pos)
         #self.canvas.bind_all('<KeyPress-a>', self.turnleft)
         #self.canvas.bind_all('<KeyPress-d>', self.turnright)
@@ -169,12 +177,30 @@ class bullet:
         #self.y1 = self.pos[2]
         #self.y2 = self.pos[3]
 
+    def respawn(self, evt):
+        #for i in range()
+        print('I am in respawn')
+        self.x = 0
+        self.y = 0
+        self.pos = self.canvas.coords(self.image)
+        ball2.ball_Coords()
+        movexby = ball_pos[0] - self.pos[0]
+        self.canvas.move(self.image, movexby, 700)
+        #print(enemy.y1)
+        #if self.y1 < enemy2.y1 + 100:
+        #    self.x = 0
+        #    self.y = 0
+        #    self.canvas.move(self.image, self.x, self.y)
+        #yourcanvas.xview_moveto(origX)
+        #yourcanvas.yview_moveto(origY)
+    
     def space_press(self, evt):
         self.press_space = self.press_space + 1
 
     def movement(self): 
         self.canvas.move(self.image, self.x, self.y) 
         self.canvas.after(100, self.movement)
+        #rint('i am in movement')
 
     def coords(self):
         xy = self.game.canvas.coords(self.image)
@@ -201,18 +227,26 @@ class bullet:
         if self.press_space == 1:
             self.canvas.move(self.image, self.x, self.y)
             self.press_space = 0
-            self.y = self.y - 20
+            self.y = - 20
             self.canvas.move(self.image, self.x, self.y)
             self.canvas.after(5, self.movement)
-            #if pressleft == 1:
-            #    self.x = 21
+            self.respawn
+            print('i am in draw')
+        if self.press_space == 0:
+            self.y1 = 0
+            self.x1 = 0
+            #self.canvas.move(self.image, self.x, self.y)
+            #print('beesechurger')
+            
+                
 
 
 class enemy:
 
     def __init__(self, canvas, color):
         self.canvas = canvas
-        self.images_sprite = [PhotoImage(file = "C:/Users/ptamm/Documents/SpaceInvaders/enemyship.png")]
+        enemy_img = os.path.join(prog_dir, rel_image_path)+"enemyship.png"
+        self.images_sprite = [PhotoImage(file = enemy_img)]
         self.image = self.canvas.create_image(10, 10, \
                 image = self.images_sprite[0], anchor='nw')
         self.x = 0
@@ -271,7 +305,8 @@ class death_cube:
     def draw(self):
 
         self.id = canvas.create_rectangle(0, 0, 2500, 2500, fill = 'red')
-        self.images_sprite = [PhotoImage(file = "C:/Users/ptamm/Documents/SpaceInvaders/elmo.png")]
+        elmo_img = os.path.join(prog_dir, rel_image_path)+"elmo.png"
+        self.images_sprite = [PhotoImage(file = elmo_img)]
         self.image = self.canvas.create_image(0, 0,\
                 image = self.images_sprite[0], anchor='nw')
 
@@ -281,7 +316,7 @@ class death_cube:
 death_cube2 = death_cube(canvas, 'red')
 counter = 0
 score = 0
-print('hamster_would_like_to_facetime = 0')
+#print('hamster_would_like_to_facetime = 0')
 
 #label .gamerestart
 
@@ -289,7 +324,7 @@ while 1:
 
     canvas.create_text(400, 700, text = ('Score: ', score))
     while gs == 0:
-        print('e')
+        #print('e')
         time.sleep(1)
         #print(gs)
         tk.update_idletasks()
@@ -303,10 +338,10 @@ while 1:
         counter = counter + 1
         #print('counter',counter)
         ball2.draw()
-        bullet2.draw()
         enemy2.my_pos()
+        bullet2.draw()
         bullet2.my_pos()
-        print(gs)
+        #print(gs)
 
         #print('lego death star', enemy2.x1, enemy2.y1)
         if counter == 10:
@@ -322,8 +357,16 @@ while 1:
                 gs = 0
                 time.sleep(5)
                 canvas.delete("all")
+                bullet2.respawn
                 break
     
+            elif bullet2.y1 <= 0:
+                print('beesechurger', bullet2.y1)
+                bullet2.y = 0
+                bullet2.y1 = 700
+                
+                
+
                 #hamster_would_like_to_facetime = 1          
         #print('enemy(x,y)', enemy2.x1, enemy2.y1)
         #print('bullet(x,y)', bullet2.x1, bullet2.y1)
