@@ -225,9 +225,9 @@ while 1:
             enemy2.draw()
             counter = 0
             if bullet2.x1 >= enemy2.x1 and bullet2.y1 == enemy2.y1 + 70 :
+                death_cube2.draw()
                 print("Bullet" , bullet2.x1, bullet2.y1)
                 print("Enemy" , enemy2.x1, enemy2.y1)
-                death_cube2.draw()
                 canvas.create_text(400, 400, text='YOU WIN', font=('Times', 69))
                 score = score + 100
                 print('Enemy defeated')
